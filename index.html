@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunrise Hotel System</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+}
+
+.container{
+    padding:50px 80px;
+}
+
+.badge{
+    background:#ffb84d;
+    padding:6px 14px;
+    border:none;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+.cards{
+    display:flex;
+    gap:20px;
+    margin-top:25px;
+}
+
+.card{
+    flex:1;
+    background:#1f2a44;
+    padding:20px;
+    border-radius:12px;
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    height:4px;
+    width:100%;
+    background:linear-gradient(90deg,#ff4d4d,#8b5cf6,#3b82f6);
+}
+
+.section{
+    display:flex;
+    gap:30px;
+    margin-top:40px;
+}
+
+.room-box,.booking-box{
+    flex:1;
+    background:#1f2a44;
+    padding:25px;
+    border-radius:15px;
+}
+
+.room-container{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.room{
+    width:140px;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.available{
+    background:#1f3d2b;
+    border:1px solid #22c55e;
+}
+
+.occupied{
+    background:#3d1f1f;
+    border:1px solid #ef4444;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    margin-bottom:15px;
+    border-radius:8px;
+    border:none;
+    background:#2d3b5c;
+    color:white;
+}
+
+.book{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    color:white;
+    cursor:pointer;
+    background:linear-gradient(90deg,#ff4d4d,#8b5cf6,#f59e0b);
+}
+
+.checkout{
+    padding:6px 12px;
+    background:#ef4444;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    margin-top:40px;
+    border-collapse:collapse;
+    background:#1f2a44;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+th{
+    background:linear-gradient(90deg,#ff4d4d,#8b5cf6,#3b82f6);
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid #333;
+}
+
+footer{
+    margin-top:50px;
+    padding:20px;
+    text-align:center;
+    color:#9ca3af;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<button class="badge">School Project</button>
+
+<h1>Sunrise Hotel System</h1>
+<p>A simple and beautiful hotel management website.</p>
+
+<div class="cards">
+    <div class="card">Total Rooms <h3>5</h3></div>
+    <div class="card">Available <h3 id="available">5</h3></div>
+    <div class="card">Occupied <h3 id="occupied">0</h3></div>
+    <div class="card">Guests <h3 id="guests">0</h3></div>
+</div>
+
+<div class="section">
+
+<div class="room-box">
+<h3>Room Status</h3>
+<div class="room-container" id="roomList"></div>
+</div>
+
+<div class="booking-box">
+<h3>Add Guest Booking</h3>
+
+<input type="text" id="guestName" placeholder="Enter guest name">
+
+<select id="roomSelect"></select>
+
+<input type="number" id="nights" value="1">
+
+<button class="book" onclick="bookRoom()">Book Room</button>
+</div>
+
+</div>
+
+<h2 style="margin-top:40px;">Guest List</h2>
+
+<table>
+<thead>
+<tr>
+<th>Guest</th>
+<th>Room</th>
+<th>Nights</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="guestTable"></tbody>
+</table>
+
+<footer>Built with HTML, CSS and JavaScript.</footer>
+
+</div>
+
+<script>
+
+let rooms = [101,102,201,202,301];
+let availableRooms = [...rooms];
+let occupiedRooms = [];
+let guestList = [];
+
+init();
+
+function init(){
+    renderRooms();
+    updateSelect();
+    updateCounts();
+}
+
+function renderRooms(){
+    let container = document.getElementById("roomList");
+    container.innerHTML="";
+
+    rooms.forEach(room=>{
+        let div=document.createElement("div");
+        div.className="room";
+
+        if(occupiedRooms.includes(room)){
+            div.classList.add("occupied");
+            div.innerHTML=`Room ${room}<br>Occupied`;
+        }else{
+            div.classList.add("available");
+            div.innerHTML=`Room ${room}<br>Available`;
+        }
+
+        container.appendChild(div);
+    });
+}
+
+function updateSelect(){
+    let select=document.getElementById("roomSelect");
+    select.innerHTML='<option value="">Select a room</option>';
+
+    availableRooms.forEach(room=>{
+        select.innerHTML+=`<option value="${room}">Room ${room}</option>`;
+    });
+}
+
+function updateCounts(){
+    document.getElementById("available").innerText=availableRooms.length;
+    document.getElementById("occupied").innerText=occupiedRooms.length;
+    document.getElementById("guests").innerText=guestList.length;
+}
+
+function bookRoom(){
+    let name=document.getElementById("guestName").value;
+    let room=parseInt(document.getElementById("roomSelect").value);
+    let nights=document.getElementById("nights").value;
+
+    if(name==""||!room){
+        alert("Fill all fields!");
+        return;
+    }
+
+    availableRooms=availableRooms.filter(r=>r!=room);
+    occupiedRooms.push(room);
+    guestList.push({name,room,nights});
+
+    renderRooms();
+    updateSelect();
+    updateCounts();
+    renderGuests();
+
+    document.getElementById("guestName").value="";
+}
+
+function renderGuests(){
+    let table=document.getElementById("guestTable");
+    table.innerHTML="";
+
+    guestList.forEach((g,i)=>{
+        table.innerHTML+=`
+        <tr>
+            <td>${g.name}</td>
+            <td>${g.room}</td>
+            <td>${g.nights}</td>
+            <td>Checked In</td>
+            <td><button class="checkout" onclick="checkOut(${i})">Check Out</button></td>
+        </tr>`;
+    });
+}
+
+function checkOut(index){
+    let room=guestList[index].room;
+
+    occupiedRooms=occupiedRooms.filter(r=>r!=room);
+    availableRooms.push(room);
+    guestList.splice(index,1);
+
+    renderRooms();
+    updateSelect();
+    updateCounts();
+    renderGuests();
+}
+
+</script>
+
+</body>
+</html>
