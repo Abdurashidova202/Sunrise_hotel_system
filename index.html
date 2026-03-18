@@ -145,6 +145,71 @@ footer{
     text-align:center;
     color:#9ca3af;
 }
+
+
+
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet */
+@media (max-width: 992px){
+    .container{
+        padding:30px 40px;
+    }
+
+    .cards{
+        flex-wrap: wrap;
+    }
+
+    .card{
+        flex: 45%;
+    }
+
+    .section{
+        flex-direction: column;
+    }
+}
+
+/* Phone */
+@media (max-width: 600px){
+    .container{
+        padding:20px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
+    .cards{
+        flex-direction: column;
+    }
+
+    .card{
+        flex: 100%;
+    }
+
+    .room{
+        width:100%;
+    }
+
+    input,select,.book{
+        font-size:14px;
+        padding:8px;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+    th,td{
+        padding:8px;
+    }
+
+    .checkout{
+        padding:5px 8px;
+        font-size:12px;
+    }
+}
 </style>
 </head>
 
@@ -309,3 +374,4 @@ function checkOut(index){
 
 </body>
 </html>
+
